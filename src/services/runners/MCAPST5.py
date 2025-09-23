@@ -1,7 +1,12 @@
 import subprocess
+from pathlib import Path
 from .base import BaseModelRunner
 
 class MCAPST5Runner(BaseModelRunner):
+    def __init__(self) -> None:
+        # Expose model directory path for tests and diagnostics
+        self.model_path = Path("ml_models/MCAPST5")
+
     def predict(self, id1: str, seq1: str, id2: str, seq2: str) -> float:
         result = subprocess.run(
             [
