@@ -5,28 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0f04bed9-716d-40ff-b8db-b9d8a07da022" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/PPI_Predictor_Api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PPI_Predictor_Api.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DockerFile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/init_setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/init_setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/init_setup.sh" beforeDir="false" afterPath="$PROJECT_DIR$/init_setup.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_models/MCAPST5/MCAPST5-X_inference.py" beforeDir="false" afterPath="$PROJECT_DIR$/ml_models/MCAPST5/MCAPST5-X_inference.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_models/MCAPST5/checkpoints/mcapst5_pan_epoch_20.hdf5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_models/MCAPST5/checkpoints/secstruct_checkpoint.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_models/MCAPST5/checkpoints/xgboost_pan_epoch_20.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml_models/MCAPST5/example_seqs.fasta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/routes/predict.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/routes/predict.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/schemas/Protein.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/schemas/PredictInput.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/logger.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/logger.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/runners/MCAPST5.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/runners/MCAPST5.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
