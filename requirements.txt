@@ -5,3 +5,5 @@ PyJWT
 Flask-SQLAlchemy
 Flask-Migrate
 flask-bcrypt
+pydantic
+pytest

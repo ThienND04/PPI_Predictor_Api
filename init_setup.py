@@ -14,7 +14,7 @@ subprocess.run('pip3 install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torcha
 subprocess.run('pip install xgboost matplotlib scikit-learn pandas gdown tensorflow==2.12.0 tensorflow-addons==0.20.0 pydot', shell=True)
 subprocess.run('apt-get install -y graphviz wget', shell=True)
 
-# Tải file mô hình & dữ liệu vào đúng thư mục
+# Tải file mô hình & dữ liệu 
 if not os.path.isfile(f"{ROOT}/checkpoints/mcapst5_pan_epoch_20.hdf5"):
     subprocess.run(f"wget -O {ROOT}/checkpoints/mcapst5_pan_epoch_20.hdf5 https://github.com/anhvt00/MCAPS/raw/master/checkpoint/Pan/mcapst5_pan_epoch_20.hdf5", shell=True)
 
