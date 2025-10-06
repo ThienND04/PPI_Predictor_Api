@@ -14,8 +14,10 @@ def create_app() -> Flask:
 
     app.register_blueprint(api, url_prefix="/api")
     CORS(app,
-         resources={r"/api/*": {"origins": "http://localhost:5173"}},
-         methods=["GET", "POST", "OPTIONS"]
+         resources={r"/api/*": {"origins": ["http://localhost:5173", "http://127.0.0.1:5173"]}},
+         methods=["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+         allow_headers=["Content-Type", "Authorization", "Accept"],
+         supports_credentials=True
          )
 
 
