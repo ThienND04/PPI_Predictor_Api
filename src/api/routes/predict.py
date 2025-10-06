@@ -12,12 +12,14 @@ import io
 import csv
 import tempfile
 import os
+from src.extensions import limiter
 
 logger = get_logger(__name__)
 
 predictRouter = Blueprint('api_routes', __name__)
 
 @predictRouter.route('', methods=['POST'])
+@limiter.limit("10 per minute")
 def predict():
     try:
         json_data = request.get_json()
@@ -57,6 +59,7 @@ def predict():
 
 
 @predictRouter.route('/batch', methods=['POST'])
+@limiter.limit("3 per minute")
 def predict_batch():
     try:
         if 'fasta_file' not in request.files or 'pairs_file' not in request.files:
