@@ -7,3 +7,5 @@ Flask-Migrate
 flask-bcrypt
 pydantic
 pytest
+sqlalchemy-utils
+passlib[bcrypt]
