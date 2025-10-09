@@ -13,7 +13,7 @@ def verify_password(password: str, hashed: str) -> bool:
     return bcrypt.verify(password, hashed)
 
 
-def generate_jwt(payload: Dict[str, Any], exp_seconds: int = 3600) -> str:
+def generate_jwt(payload: Dict[str, Any], exp_seconds: int = 3600 * 60) -> str:
     secret = os.getenv('JWT_SECRET')
     if not secret:
         raise RuntimeError('JWT_SECRET is not set')

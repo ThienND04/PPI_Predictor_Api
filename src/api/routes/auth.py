@@ -164,7 +164,7 @@ def login():
         if not verify_password(password, user.password_hash):
             return jsonify({"error": "Invalid password"}), 401
 
-        token = generate_jwt({"sub": user.id, "email": user.email})
+        token = generate_jwt({"sub": str(user.id), "email": user.email})
         return jsonify({"message": "Login successful", "token": token}), 200
     except Exception as e:
         print(f"Error in login: {e}")
