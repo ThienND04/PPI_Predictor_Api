@@ -1,1 +1,5 @@
 venv
+.env
+__pychache__
+ml_models/MCAPST5/output
+ml_models/MCAPST5/checkpoints
