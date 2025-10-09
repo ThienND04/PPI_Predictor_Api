@@ -1,18 +1,16 @@
 from logging import Logger
 from datetime import datetime, timezone
-
 from flask import Blueprint, request, jsonify, send_file
 from src.api.schemas.PredictInput import PredictInput
 from pydantic import ValidationError
-
 from src.services.registry import get_runner
 from src.core.logger import get_logger
 from src.utils.fasta_parser import parse_fasta, parse_pairs
-import io
-import csv
+from src.models.prediction_result import PredictionResult
 import tempfile
-import os
 from src.extensions import limiter
+from src.utils.security import verify_jwt
+from src.models import db
 
 logger = get_logger(__name__)
 
@@ -22,6 +20,7 @@ predictRouter = Blueprint('api_routes', __name__)
 @limiter.limit("10 per minute")
 def predict():
     try:
+        print("Received /predict request")
         json_data = request.get_json()
         if not json_data:
             return jsonify({"error": "No JSON data provided"}), 400
@@ -43,6 +42,45 @@ def predict():
             "threshold": threshold,
             "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         }
+
+        # Attempt to resolve user from Authorization header (Bearer token)
+        user_id = None
+        try:
+            auth_header = request.headers.get('Authorization', '')
+            print(f"Auth Header: {auth_header}")
+            if auth_header.startswith('Bearer '):
+                token = auth_header.split(' ', 1)[1].strip()
+                # print(f"Token: {token}")
+                payload = verify_jwt(token)
+                # print(f"Payload: {payload}")
+                user_id = payload.get('sub')
+        except Exception as e:
+            # Invalid/missing token => treat as anonymous
+            print(f"JWT verification failed: {e}")
+            user_id = None
+
+
+        # print(f"User ID: {user_id}")
+
+        # If user is logged in and we have a valid score, save prediction result
+        if user_id is not None and score is not None:
+            try:
+                rec = PredictionResult(
+                    user_id=user_id,
+                    model_name=data.model,
+                    protein1_id=data.id1,
+                    protein2_id=data.id2,
+                    score=float(score),
+                    label=label,
+                    threshold=float(threshold),
+                )
+                db.session.add(rec)
+                db.session.commit()
+                print(f"Saved prediction result for user {user_id}")
+            except Exception as e:
+                print(f"Failed to save prediction result: {e}")
+                db.session.rollback()
+
         return jsonify(response)
     except ValidationError as e:
         logger.warning(f"Validation error: {e}")

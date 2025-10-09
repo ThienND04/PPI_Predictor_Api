@@ -56,7 +56,7 @@ def create_app() -> Flask:
         with app.app_context():
             inspector = inspect(db.engine)
             existing_tables = set(inspector.get_table_names())
-            required_tables = {"users", "verification_codes", "password_reset_codes"}
+            required_tables = {"users", "verification_codes", "password_reset_codes", "prediction_results"}
 
             if not required_tables.issubset(existing_tables):
                 print("[DB] Creating missing tables…")
@@ -64,6 +64,7 @@ def create_app() -> Flask:
                 from src.models.user import User  # noqa: F401
                 from src.models.verification import VerificationCode  # noqa: F401
                 from src.models.password_reset import PasswordResetCode  # noqa: F401
+                from src.models.prediction_result import PredictionResult  # noqa: F401
                 db.create_all()
                 print("[DB] Creating missing tables… done.")
     except Exception as e:
