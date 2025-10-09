@@ -1,4 +1,5 @@
 flask
+flask_limiter
 pathlib
 python-dotenv
 PyJWT
@@ -9,3 +10,6 @@ pydantic
 pytest
 sqlalchemy-utils
 passlib[bcrypt]
+pydantic[email]
+flask-cors
+psycopg2-binary
