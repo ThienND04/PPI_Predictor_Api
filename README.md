@@ -229,32 +229,3 @@ gunicorn -w 4 -b 0.0.0.0:3000 "src.app_factory:create_app()"
 source venv/bin/activate  # Linux/macOS
 # venv\Scripts\activate   # Windows
 ```
-
-3) Cài đặt phụ thuộc
-```bash
-./init_setup.sh
-# hoặc
-pip install -r requirements.txt
-```
-
-4) Tạo file .env (ví dụ)
-```
-FLASK_ENV=development
-SECRET_KEY=change-me
-JWT_SECRET=change-me
-SQLALCHEMY_DATABASE_URI=sqlite:///ppi.db
-```
-
-5) Khởi tạo CSDL (nếu dùng migrations)
-```bash
-flask db init
-flask db migrate
-flask db upgrade
-```
-
-6) Chạy ứng dụng
-```bash
-python app.py
-# hoặc
-flask --app app run --debug
-```
