@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, timezone
 import os
 import re
 import random
+from flasgger import swag_from
 
 from src.models import db
 from src.models.user import User
@@ -22,6 +23,7 @@ def _validate_email(email: str) -> bool:
 
 
 @authRouter.route('/register', methods=['POST'])
+@swag_from(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'static/swagger_specs/auth/register.yml'))
 def register():
     try:
         # Accept JSON or form-encoded
@@ -62,6 +64,7 @@ def register():
 
 
 @authRouter.route('/verify', methods=['POST'])
+@swag_from(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'static/swagger_specs/auth/verify.yml'))
 def verify():
     try:
         raw = request.get_json(silent=True)
@@ -102,6 +105,7 @@ def verify():
 
 
 @authRouter.route('/resend-code', methods=['POST'])
+@swag_from(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'static/swagger_specs/auth/resend_code.yml'))
 def resend_code():
     try:
         raw = request.get_json(silent=True)
@@ -149,6 +153,7 @@ def resend_code():
 
 
 @authRouter.route('/login', methods=['POST'])
+@swag_from(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'static/swagger_specs/auth/login.yml'))
 def login():
     try:
         raw = request.get_json(silent=True)
@@ -178,6 +183,7 @@ def login():
 
 
 @authRouter.route('/forgot-password', methods=['POST'])
+@swag_from(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'static/swagger_specs/auth/forgot_password.yml'))
 def forgot_password():
     try:
         raw = request.get_json(silent=True)
@@ -216,6 +222,7 @@ def forgot_password():
 
 
 @authRouter.route('/reset-password', methods=['POST'])
+@swag_from(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'static/swagger_specs/auth/reset_password.yml'))
 def reset_password():
     try:
         raw = request.get_json(silent=True)
@@ -259,6 +266,7 @@ def reset_password():
 
 
 @authRouter.route('/change-password', methods=['POST'])
+@swag_from(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'static/swagger_specs/auth/change_password.yml'))
 def change_password():
     try:
         raw = request.get_json(silent=True)

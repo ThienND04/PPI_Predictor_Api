@@ -1,0 +1,94 @@
+definitions:
+  Error:
+    type: object
+    properties:
+      error:
+        type: string
+        example: "Error message"
+        
+  ValidationError:
+    type: object
+    properties:
+      error:
+        type: string
+        example: "Validation error"
+      details:
+        type: array
+        items:
+          type: object
+          
+  PredictionRecord:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 123
+      model_name:
+        type: string
+        example: "MCAPST5"
+      protein1_id:
+        type: string
+        example: "P12345"
+      protein2_id:
+        type: string
+        example: "Q98765"
+      score:
+        type: number
+        format: float
+        example: 0.7845
+      label:
+        type: string
+        enum: ["interaction", "no_interaction"]
+        example: "interaction"
+      timestamp:
+        type: string
+        format: date-time
+        example: "2026-01-29T10:30:00Z"
+        
+  PredictionResponse:
+    type: object
+    properties:
+      protein1:
+        type: object
+        properties:
+          id:
+            type: string
+            example: "P12345"
+      protein2:
+        type: object
+        properties:
+          id:
+            type: string
+            example: "Q98765"
+      model:
+        type: string
+        example: "MCAPST5"
+      score:
+        type: number
+        format: float
+        example: 0.7845
+      label:
+        type: string
+        enum: ["interaction", "no_interaction"]
+        example: "interaction"
+      threshold:
+        type: number
+        example: 0.5
+      timestamp:
+        type: string
+        format: date-time
+        example: "2026-01-29T10:30:00Z"
+        
+  HistoryResponse:
+    type: object
+    properties:
+      user_id:
+        type: string
+        example: "123"
+      total_records:
+        type: integer
+        example: 25
+      predictions:
+        type: array
+        items:
+          $ref: '#/definitions/PredictionRecord'

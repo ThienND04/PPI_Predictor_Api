@@ -1,0 +1,82 @@
+Predict protein-protein interaction
+---
+tags:
+  - Prediction
+summary: Single PPI prediction
+description: |
+  Predict interaction between two proteins using specified machine learning model.
+  
+  **Rate Limit:** 10 requests per minute
+  
+  **Authentication:** Optional - If Bearer token is provided, prediction will be saved to user's history
+  
+  **Model:** Currently supports MCAPST5 model
+consumes:
+  - application/json
+produces:
+  - application/json
+security:
+  - Bearer: []
+parameters:
+  - name: Authorization
+    in: header
+    type: string
+    required: false
+    description: "Optional: Bearer token for saving prediction to history"
+    example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - seq1
+        - seq2
+      properties:
+        id1:
+          type: string
+          example: "P12345"
+          default: "PROTEIN1"
+          description: Identifier for first protein (optional)
+        seq1:
+          type: string
+          example: "MKTAYIAKQRQISFVKSHFSRQLEERLGLIEVQAPILSRVGDGTQDNLSGAEKAVQVKVKALPDAQFEVVHSLAKWKRQTLGQHDFSAGEGLYTHMKALRPDEDRLSPLHSVYVDQWDWERVMGDGERQFSTLKSTVEAIWAGIKATEAAVSEEFGLAPFLPDQIHFVHSQELLSRYPDLDAKGRERAIAKDLGAVFLVGIGGKLSDGHRHDVRAPDYDDWSTPSELGHAGLNGDILVWNPVLEDAFELSSMGIRVDADTLKHQLALTGDEDRLELEWHQALLRGEMPQTIGGGIGQSRLTMLLLQLPHIGQVQAGVWPAAVRESVPSLL"
+          description: Amino acid sequence of first protein (required, valid amino acids only)
+        id2:
+          type: string
+          example: "Q98765"
+          default: "PROTEIN2"
+          description: Identifier for second protein (optional)
+        seq2:
+          type: string
+          example: "MAVRSYKDRVKVVLDQLSTINEEEKAKILEAQRGFKPMQVLELGASTDEEKLRRLKDRSSVFISLAIVTRMEDGKTLNDSGTKVYRMVTAAEDGKTLKPSTGEVVVLAGSDATLNQKVRAAEDGKTLGKSTGEVVVLAGSDATLNQKVRAAEDGKTLGKSTG"
+          description: Amino acid sequence of second protein (required, valid amino acids only)
+        model:
+          type: string
+          example: "MCAPST5"
+          default: "MCAPST5"
+          description: Model name to use for prediction
+responses:
+  200:
+    description: Prediction successful
+    schema:
+      $ref: '#/definitions/PredictionResponse'
+  400:
+    description: Invalid input (validation error)
+    schema:
+      $ref: '#/definitions/Error'
+    examples:
+      application/json:
+        error: "Invalid amino acid sequence"
+  408:
+    description: Prediction timeout
+    schema:
+      $ref: '#/definitions/Error'
+  429:
+    description: Rate limit exceeded (10 per minute)
+    schema:
+      $ref: '#/definitions/Error'
+  500:
+    description: Server error
+    schema:
+      $ref: '#/definitions/Error'

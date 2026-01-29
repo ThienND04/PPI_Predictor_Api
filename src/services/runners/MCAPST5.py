@@ -8,6 +8,7 @@ class MCAPST5Runner(BaseModelRunner):
         self.model_path = Path("ml_models/MCAPST5")
 
     def predict(self, id1: str, seq1: str, id2: str, seq2: str) -> float:
+        # Timeout 600s (10 min) to allow first-run model download from HuggingFace
         result = subprocess.run(
             [
                 "python", "ml_models/MCAPST5/MCAPST5-X_inference.py",
@@ -19,7 +20,7 @@ class MCAPST5Runner(BaseModelRunner):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            timeout=120
+            timeout=600
         )
         if result.returncode != 0:
             raise RuntimeError(result.stderr.strip())

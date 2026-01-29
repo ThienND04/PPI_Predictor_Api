@@ -1,0 +1,49 @@
+Get specific prediction by ID
+---
+tags:
+  - History
+summary: Get prediction by ID
+description: |
+  Retrieve a specific prediction record by its ID.
+  
+  **Authentication:** Required - Bearer token must be provided
+  
+  **Authorization:** User must own the record (user_id must match token)
+security:
+  - Bearer: []
+produces:
+  - application/json
+parameters:
+  - name: Authorization
+    in: header
+    type: string
+    required: true
+    description: "Bearer token for authentication"
+    example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  - name: history_id
+    in: path
+    type: integer
+    required: true
+    description: ID of the prediction record to retrieve
+    example: 123
+responses:
+  200:
+    description: Record retrieved successfully
+    schema:
+      $ref: '#/definitions/PredictionRecord'
+  401:
+    description: Unauthorized - missing or invalid token
+    schema:
+      $ref: '#/definitions/Error'
+  403:
+    description: Forbidden - record belongs to another user
+    schema:
+      $ref: '#/definitions/Error'
+  404:
+    description: Record not found
+    schema:
+      $ref: '#/definitions/Error'
+  500:
+    description: Database query failed
+    schema:
+      $ref: '#/definitions/Error'

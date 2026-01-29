@@ -8,9 +8,11 @@ from src.core.logger import get_logger
 from src.utils.fasta_parser import parse_fasta, parse_pairs
 from src.models.prediction_result import PredictionResult
 import tempfile
+import os
 from src.extensions import limiter
 from src.utils.security import verify_jwt
 from src.models import db
+from flasgger import swag_from
 
 logger = get_logger(__name__)
 
@@ -18,6 +20,7 @@ predictRouter = Blueprint('api_routes', __name__)
 
 @predictRouter.route('', methods=['POST'])
 @limiter.limit("10 per minute")
+@swag_from(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'static/swagger_specs/predict/predict.yml'))
 def predict():
     try:
         print("Received /predict request")
@@ -98,6 +101,7 @@ def predict():
 
 @predictRouter.route('/batch', methods=['POST'])
 @limiter.limit("3 per minute")
+@swag_from(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'static/swagger_specs/predict/batch.yml'))
 def predict_batch():
     try:
         if 'fasta_file' not in request.files or 'pairs_file' not in request.files:

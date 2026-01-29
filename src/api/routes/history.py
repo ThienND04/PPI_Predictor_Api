@@ -4,10 +4,13 @@ from src.utils.security import verify_jwt
 from sqlalchemy import text, inspect
 from src.models import db
 from src.api.schemas.HistorySchemas import HistoryResponse
+from flasgger import swag_from
+import os
 
 historyRouter = Blueprint("historyRouter", __name__)
 
 @historyRouter.get("/")
+@swag_from(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'static/swagger_specs/history/get_all.yml'))
 def get_history():
     print("Received /history request")
     user_id = None
@@ -128,6 +131,7 @@ def get_history():
         return jsonify({"error": "Database query failed"}), 500
 
 @historyRouter.get("/<int:history_id>")
+@swag_from(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'static/swagger_specs/history/get_by_id.yml'))
 def get_history_by_id(history_id: int):
     user_id: Optional[Any] = None
     try:
@@ -213,6 +217,7 @@ def get_history_by_id(history_id: int):
         return jsonify({"error": "Database query failed"}), 500
 
 @historyRouter.delete("/<int:history_id>")
+@swag_from(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'static/swagger_specs/history/delete_by_id.yml'))
 def delete_history_by_id(history_id: int):
     user_id: Optional[Any] = None
     try:
@@ -262,6 +267,7 @@ def delete_history_by_id(history_id: int):
         return jsonify({"error": "Database query failed"}), 500
 
 @historyRouter.delete("/")
+@swag_from(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'static/swagger_specs/history/delete_all.yml'))
 def delete_all_history():
     # Authenticate and get user_id from token
     user_id: Optional[Any] = None
