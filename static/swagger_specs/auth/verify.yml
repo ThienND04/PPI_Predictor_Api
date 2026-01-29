@@ -1,0 +1,47 @@
+Verify user's email address
+---
+tags:
+  - Authentication
+summary: Verify email with code
+description: Verify user's email address using the 6-digit verification code sent to their email
+consumes:
+  - application/json
+  - application/x-www-form-urlencoded
+produces:
+  - application/json
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - email
+        - code
+      properties:
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+          description: User's email address
+        code:
+          type: string
+          example: "123456"
+          description: 6-digit verification code sent to email
+responses:
+  200:
+    description: Email verified successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Email verified successfully"
+  400:
+    description: User not found or invalid/expired verification code
+    schema:
+      $ref: '#/definitions/Error'
+  500:
+    description: Internal server error
+    schema:
+      $ref: '#/definitions/Error'

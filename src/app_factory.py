@@ -10,6 +10,7 @@ from sqlalchemy.engine.url import make_url
 import os
 from sqlalchemy import create_engine, text, inspect
 from sqlalchemy_utils import database_exists, create_database
+from flasgger import Swagger
 
 def create_app() -> Flask:
     load_dotenv()
@@ -80,8 +81,183 @@ def create_app() -> Flask:
         return {"error": "Rate limit exceeded. Please try again later."}, 429
 
     app.register_blueprint(api, url_prefix="/api")
+    
+    # Configure Swagger UI
+    swagger_config = {
+        "headers": [],
+        "specs": [
+            {
+                "endpoint": "apispec",
+                "route": "/apispec.json",
+                "rule_filter": lambda rule: True,
+                "model_filter": lambda tag: True,
+            }
+        ],
+        "static_url_path": "/flasgger_static",
+        "swagger_ui": True,
+        "specs_route": "/apidocs/"
+    }
+    
+    swagger_template = {
+        "swagger": "2.0",
+        "info": {
+            "title": "PPI Predictor API",
+            "description": "API for Protein-Protein Interaction (PPI) Prediction using machine learning models",
+            "version": "1.0.0",
+            "contact": {
+                "name": "API Support"
+            }
+        },
+        "basePath": "/api",
+        "schemes": ["http", "https"],
+        "securityDefinitions": {
+            "Bearer": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header",
+                "description": "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'"
+            }
+        },
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "definitions": {
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "string",
+                        "example": "Error message"
+                    }
+                }
+            },
+            "ValidationError": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "string",
+                        "example": "Validation error"
+                    },
+                    "details": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "PredictionRecord": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 123
+                    },
+                    "model_name": {
+                        "type": "string",
+                        "example": "MCAPST5"
+                    },
+                    "protein1_id": {
+                        "type": "string",
+                        "example": "P12345"
+                    },
+                    "protein2_id": {
+                        "type": "string",
+                        "example": "Q98765"
+                    },
+                    "score": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 0.7845
+                    },
+                    "label": {
+                        "type": "string",
+                        "enum": ["interaction", "no_interaction"],
+                        "example": "interaction"
+                    },
+                    "timestamp": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-01-29T10:30:00Z"
+                    }
+                }
+            },
+            "PredictionResponse": {
+                "type": "object",
+                "properties": {
+                    "protein1": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "example": "P12345"
+                            }
+                        }
+                    },
+                    "protein2": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "example": "Q98765"
+                            }
+                        }
+                    },
+                    "model": {
+                        "type": "string",
+                        "example": "MCAPST5"
+                    },
+                    "score": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 0.7845
+                    },
+                    "label": {
+                        "type": "string",
+                        "enum": ["interaction", "no_interaction"],
+                        "example": "interaction"
+                    },
+                    "threshold": {
+                        "type": "number",
+                        "example": 0.5
+                    },
+                    "timestamp": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2026-01-29T10:30:00Z"
+                    }
+                }
+            },
+            "HistoryResponse": {
+                "type": "object",
+                "properties": {
+                    "user_id": {
+                        "type": "string",
+                        "example": "123"
+                    },
+                    "total_records": {
+                        "type": "integer",
+                        "example": 25
+                    },
+                    "predictions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/PredictionRecord"
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    Swagger(app, config=swagger_config, template=swagger_template)
+    
     CORS(app,
-         resources={r"/api/*": {"origins": ["http://localhost:5173", "http://127.0.0.1:5173"]}},
+         resources={
+             r"/api/*": {"origins": ["http://localhost:5173", "http://127.0.0.1:5173"]},
+             r"/apidocs/*": {"origins": "*"},
+             r"/apispec.json": {"origins": "*"},
+             r"/flasgger_static/*": {"origins": "*"}
+         },
          methods=["GET", "POST", "OPTIONS", "PUT", "DELETE"],
          allow_headers=["Content-Type", "Authorization", "Accept"],
          supports_credentials=True

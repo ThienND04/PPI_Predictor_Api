@@ -1,0 +1,96 @@
+Batch predict protein interactions
+---
+tags:
+  - Prediction
+summary: Batch PPI prediction from files
+description: |
+  Predict multiple protein-protein interactions from FASTA and pairs files.
+  
+  **Rate Limit:** 3 requests per minute
+  
+  **FASTA File Format:** Standard FASTA with protein IDs and sequences
+  ```
+  >P12345
+  MKTAYIAKQRQISFVKSHFSRQLE...
+  >Q98765
+  MAVRSYKDRVKVVLDQLSTINEE...
+  ```
+  
+  **Pairs File Format:** Space or tab separated protein IDs (one pair per line)
+  ```
+  P12345 Q98765
+  P12345 Q87654
+  P23456 Q98765
+  ```
+  
+  **Response Format:** Text file with space-separated results (format: id1 id2 score)
+  
+  Metadata is returned in response headers (X-Model, X-Total-Pairs, X-Successful-Predictions, etc.)
+consumes:
+  - multipart/form-data
+produces:
+  - text/plain
+parameters:
+  - name: fasta_file
+    in: formData
+    type: file
+    required: true
+    description: FASTA file containing protein sequences
+  - name: pairs_file
+    in: formData
+    type: file
+    required: true
+    description: "Text file with protein pairs to predict (format: id1 id2, one per line)"
+  - name: model
+    in: formData
+    type: string
+    required: false
+    default: "MCAPST5"
+    description: Model name to use for prediction (defaults to MCAPST5)
+responses:
+  200:
+    description: Batch prediction successful - returns downloadable text file
+    schema:
+      type: string
+      example: |
+        P12345 Q98765 0.7845
+        P12345 Q87654 0.3421
+        P23456 Q98765 0.6234
+    headers:
+      X-Model:
+        type: string
+        description: Model used for predictions
+      X-Threshold:
+        type: string
+        description: Threshold used (0.5)
+      X-Timestamp:
+        type: string
+        description: Prediction timestamp (ISO8601 UTC)
+      X-Total-Pairs:
+        type: string
+        description: Total number of pairs processed
+      X-Successful-Predictions:
+        type: string
+        description: Number of successful predictions
+      X-Failed-Predictions:
+        type: string
+        description: Number of failed predictions
+  400:
+    description: Missing or invalid files
+    schema:
+      $ref: '#/definitions/Error'
+    examples:
+      application/json:
+        error: "Missing required files 'fasta_file' and/or 'pairs_file'"
+  408:
+    description: Prediction timeout
+    schema:
+      $ref: '#/definitions/Error'
+  429:
+    description: Rate limit exceeded (3 per minute)
+    schema:
+      $ref: '#/definitions/Error'
+  500:
+    description: Server error
+    schema:
+      $ref: '#/definitions/Error'

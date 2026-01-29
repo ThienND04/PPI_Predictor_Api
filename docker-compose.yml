@@ -1,0 +1,98 @@
+# =============================================================================
+# PPI_Predictor_Api Docker Compose
+# Run: docker-compose up --build
+# =============================================================================
+
+services:
+  # =============================================================================
+  # PostgreSQL Database
+  # =============================================================================
+  db:
+    image: postgres:15-alpine
+    container_name: ppi_predictor_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ppi_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ppi_password}
+      POSTGRES_DB: ${POSTGRES_DB:-ppi_predictor}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ppi_user} -d ${POSTGRES_DB:-ppi_predictor}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # =============================================================================
+  # PPI Predictor API
+  # =============================================================================
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ppi_predictor_api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Database connection (uses PostgreSQL service)
+      DB_CONNECTION_STRING: postgresql://${POSTGRES_USER:-ppi_user}:${POSTGRES_PASSWORD:-ppi_password}@db:5432/${POSTGRES_DB:-ppi_predictor}
+      
+      # Security (set these in .env file!)
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+      
+      # Email settings (optional)
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      
+      # Flask environment
+      FLASK_ENV: ${FLASK_ENV:-development}
+    ports:
+      - "3000:3000"
+    volumes:
+      # Persist HuggingFace model cache (avoids re-downloading ~3GB model)
+      - huggingface_cache:/app/.cache/huggingface
+      # Optional: Mount source code for development (uncomment for hot-reload)
+      # - ./src:/app/src:ro
+      # - ./app.py:/app/app.py:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      start_period: 120s  # Model loading can take time
+      retries: 3
+
+  # =============================================================================
+  # PGAdmin (Optional - Database Management UI)
+  # Access at http://localhost:5050
+  # =============================================================================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: ppi_predictor_pgadmin
+    restart: unless-stopped
+    profiles:
+      - tools  # Only starts with: docker-compose --profile tools up
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@admin.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+    name: ppi_predictor_postgres_data
+  huggingface_cache:
+    name: ppi_predictor_hf_cache
+  pgadmin_data:
+    name: ppi_predictor_pgadmin_data

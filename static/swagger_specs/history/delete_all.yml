@@ -1,0 +1,40 @@
+Delete all prediction history
+---
+tags:
+  - History
+summary: Delete all predictions
+description: |
+  Permanently delete all prediction records belonging to the authenticated user.
+  
+  **Authentication:** Required - Bearer token must be provided
+  
+  **Warning:** This action cannot be undone!
+security:
+  - Bearer: []
+produces:
+  - application/json
+parameters:
+  - name: Authorization
+    in: header
+    type: string
+    required: true
+    description: "Bearer token for authentication"
+    example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+responses:
+  200:
+    description: All records deleted successfully
+    schema:
+      type: object
+      properties:
+        deleted:
+          type: integer
+          example: 25
+          description: Number of records deleted
+  401:
+    description: Unauthorized - missing or invalid token
+    schema:
+      $ref: '#/definitions/Error'
+  500:
+    description: Database query failed
+    schema:
+      $ref: '#/definitions/Error'

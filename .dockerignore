@@ -1,0 +1,77 @@
+# =============================================================================
+# Docker Ignore File
+# Files and directories to exclude from Docker build context
+# =============================================================================
+
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+eggs/
+*.egg
+.mypy_cache/
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment files (will be passed via docker-compose)
+.env
+.env.local
+.env.*.local
+
+# Test files
+test/
+tests/
+*.test.py
+conftest.py
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# Local development files
+*.log
+*.sqlite
+*.db
+ppi_predictor.db
+
+# Jupyter notebooks (keep inference notebook)
+*.ipynb
+!ml_models/MCAPST5/MCAPST5-X_inference.ipynb
+
+# Downloaded checkpoints (will be downloaded during build)
+# Uncomment if you want to include local checkpoints instead of downloading
+# ml_models/MCAPST5/checkpoints/
+
+# Cache directories
+.cache/
+*.cache
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp

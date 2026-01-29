@@ -1,0 +1,35 @@
+Get all prediction history
+---
+tags:
+  - History
+summary: Get prediction history
+description: |
+  Retrieve all prediction records for the authenticated user.
+  
+  Results are ordered by creation date (most recent first), then by ID.
+  
+  **Authentication:** Required - Bearer token must be provided
+security:
+  - Bearer: []
+produces:
+  - application/json
+parameters:
+  - name: Authorization
+    in: header
+    type: string
+    required: true
+    description: "Bearer token for authentication"
+    example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+responses:
+  200:
+    description: History retrieved successfully
+    schema:
+      $ref: '#/definitions/HistoryResponse'
+  401:
+    description: Unauthorized - missing or invalid token
+    schema:
+      $ref: '#/definitions/Error'
+  500:
+    description: Database query failed
+    schema:
+      $ref: '#/definitions/Error'
