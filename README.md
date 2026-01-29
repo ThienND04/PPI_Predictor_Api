@@ -63,7 +63,7 @@ cp .env.example .env
 # 4. Build and start services (first run: ~15-20 minutes)
 docker-compose up --build
 
-# 5. API is now live! 🎉
+# 5. API is now live! 
 # Access at: http://localhost:3000
 ```
 
@@ -93,17 +93,9 @@ docker-compose down -v && docker-compose up
 docker-compose ps
 ```
 
-### What Docker Does Automatically:
-- ✅ Installs Python 3.9 with all dependencies
-- ✅ Installs PyTorch & TensorFlow (CPU version)
-- ✅ Downloads MCAPST5 model checkpoints (~500MB)
-- ✅ Sets up PostgreSQL database
-- ✅ Creates all database tables
-- ✅ Caches HuggingFace ProtT5 model (~3GB, downloaded on first prediction)
-
 ---
 
-## 📦 Manual Installation (Without Docker)
+## Manual Installation (Without Docker)
 
 For development or custom deployment scenarios.
 
@@ -224,8 +216,3 @@ pip install gunicorn
 gunicorn -w 4 -b 0.0.0.0:3000 "src.app_factory:create_app()"
 ```
 
-```bash
-# Activate virtual environment
-source venv/bin/activate  # Linux/macOS
-# venv\Scripts\activate   # Windows
-```
